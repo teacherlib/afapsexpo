@@ -1,0 +1,339 @@
+```html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>📢 เรียนเชิญร่วมงาน AFAPS BOOK EXPO 2026 📚📚</title>
+
+    <!-- LINE LIFF SDK -->
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 20px;
+
+            font-family: Tahoma, sans-serif;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #eef2ff;
+        }
+
+        .msg {
+            display: none;
+
+            width: 100%;
+            max-width: 420px;
+
+            padding: 24px 20px;
+
+            background: #ffffff;
+            border-radius: 16px;
+
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.10);
+
+            font-size: 16px;
+            line-height: 1.7;
+            text-align: center;
+
+            color: #333333;
+
+            overflow-wrap: anywhere;
+        }
+
+        #loadingMsg {
+            color: #4338ca;
+        }
+
+        #successMsg {
+            color: #15803d;
+        }
+
+        #errorMsg {
+            color: #b91c1c;
+        }
+
+        .spinner {
+            display: inline-block;
+
+            width: 22px;
+            height: 22px;
+
+            border: 3px solid #c7d2fe;
+            border-top-color: #4f46e5;
+
+            border-radius: 50%;
+
+            animation: spin 0.8s linear infinite;
+
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        .retry-button {
+            display: inline-block;
+
+            margin-top: 16px;
+            padding: 10px 22px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #4f46e5;
+            color: #ffffff;
+
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .retry-button:hover {
+            background: #3730a3;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="msg" id="loadingMsg" role="status" aria-live="polite">
+        <span class="spinner"></span>
+        กำลังเตรียมการแชร์...
+    </div>
+
+    <div class="msg" id="successMsg" role="status" aria-live="polite">
+        ✅ ดำเนินการแชร์เรียบร้อยแล้ว
+        <br>
+        กำลังปิดหน้าต่าง...
+    </div>
+
+    <div class="msg" id="errorMsg" role="alert" aria-live="assertive">
+        ❌ เกิดข้อผิดพลาด
+        <br>
+        <span id="errorDetail"></span>
+        <br>
+        <button
+            type="button"
+            class="retry-button"
+            id="retryButton"
+            onclick="main()">
+            ลองอีกครั้ง
+        </button>
+    </div>
+
+    <script>
+        "use strict";
+
+        // ==========================================
+        // 1. ตั้งค่า LIFF
+        // ==========================================
+
+        const LIFF_ID = "2007236505-njPbwwmN";
+
+        // ==========================================
+        // 2. กำหนด Flex Message
+        // ==========================================
+
+        const flexMessage = {
+            type: "flex",
+
+            altText: "ประชาสัมพันธ์!! การทำสัญญาออนไลน์เข้าเป็น นตท.",
+
+            contents: {
+                type: "bubble",
+
+                size: "giga",
+
+                body: {
+                    type: "box",
+                    layout: "vertical",
+
+                    paddingAll: "0px",
+                    spacing: "none",
+
+                    contents: [
+                        {
+                            type: "image",
+
+                            url: "https://i.postimg.cc/y6RLqzbF/kahndkar.png",
+
+                            size: "full",
+                            aspectRatio: "2:3",
+                            aspectMode: "fit",
+
+                            animated: true,
+
+                            action: {
+                                type: "uri",
+                                uri: "https://qr.generatorqr.com/storage/pdf/f8/7d/f84db393-7dee-4c4e-bbfb-fc2201c4836d6ad5e364709aa4.90184037.pdf"
+                            }
+                        }
+                    ]
+                }
+            }
+        };
+
+        // ==========================================
+        // 3. แสดงข้อความสถานะ
+        // ==========================================
+
+        function displayMessage(id) {
+            document.querySelectorAll(".msg").forEach(function (element) {
+                element.style.display = "none";
+            });
+
+            const target = document.getElementById(id);
+
+            if (target) {
+                target.style.display = "block";
+            }
+        }
+
+        // ==========================================
+        // 4. แสดงข้อความ Error อย่างปลอดภัย
+        // ==========================================
+
+        function displayError(message) {
+            document.getElementById("errorDetail").textContent =
+                message || "ไม่ทราบสาเหตุ";
+
+            displayMessage("errorMsg");
+        }
+
+        // ==========================================
+        // 5. เริ่มต้น LIFF และแชร์ Flex Message
+        // ==========================================
+
+        let isProcessing = false;
+
+        async function main() {
+
+            if (isProcessing) {
+                return;
+            }
+
+            isProcessing = true;
+
+            const retryButton = document.getElementById("retryButton");
+
+            retryButton.disabled = true;
+
+            displayMessage("loadingMsg");
+
+            try {
+
+                // ตรวจสอบว่าโหลด LIFF SDK สำเร็จหรือไม่
+                if (typeof liff === "undefined") {
+                    throw new Error(
+                        "ไม่สามารถโหลด LINE LIFF SDK ได้ กรุณาตรวจสอบอินเทอร์เน็ต"
+                    );
+                }
+
+                // เริ่มต้น LIFF
+                await liff.init({
+                    liffId: LIFF_ID
+                });
+
+                // ตรวจสอบสถานะการเข้าสู่ระบบ
+                if (!liff.isLoggedIn()) {
+
+                    // ต้องเปิดใช้งาน Login URL และ LIFF Endpoint
+                    // ให้ถูกต้องใน LINE Developers Console
+                    liff.login();
+
+                    return;
+                }
+
+                // ตรวจสอบความพร้อมของ Share Target Picker
+                if (
+                    typeof liff.shareTargetPicker !== "function" ||
+                    !liff.isApiAvailable("shareTargetPicker")
+                ) {
+                    throw new Error(
+                        "อุปกรณ์หรือสภาพแวดล้อมนี้ไม่รองรับ Share Target Picker " +
+                        "กรุณาเปิดผ่าน LINE หรือใช้สภาพแวดล้อมที่รองรับ"
+                    );
+                }
+
+                // เปิดหน้าต่างเลือกผู้รับเพื่อแชร์ Flex Message
+                const result = await liff.shareTargetPicker(
+                    [flexMessage],
+                    {
+                        isMultiple: true
+                    }
+                );
+
+                // ตรวจสอบผลการแชร์
+                if (result) {
+
+                    displayMessage("successMsg");
+
+                    setTimeout(function () {
+
+                        try {
+                            liff.closeWindow();
+                        } catch (error) {
+                            console.warn(
+                                "ไม่สามารถปิดหน้าต่าง LIFF ได้:",
+                                error
+                            );
+                        }
+
+                    }, 2000);
+
+                } else {
+
+                    // ผู้ใช้ยกเลิกการแชร์
+                    displayError(
+                        "คุณยกเลิกการแชร์ หรือระบบไม่ได้รับการยืนยันผลการแชร์"
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error("LIFF Share Error:", error);
+
+                displayError(
+                    error && error.message
+                        ? error.message
+                        : "เกิดข้อผิดพลาดที่ไม่สามารถระบุสาเหตุได้"
+                );
+
+            } finally {
+
+                isProcessing = false;
+
+                retryButton.disabled = false;
+
+            }
+        }
+
+        // ==========================================
+        // 6. เริ่มทำงานเมื่อโหลดหน้าเว็บเสร็จ
+        // ==========================================
+
+        window.addEventListener("load", function () {
+            main();
+        });
+
+    </script>
+
+</body>
+</html>
+```
