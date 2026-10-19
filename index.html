@@ -1,438 +1,136 @@
-```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color" content="#4f46e5">
-    <meta name="description" content="เรียนเชิญร่วมงาน AFAPS BOOK EXPO 2026">
-
-    <title>📢 เรียนเชิญร่วมงาน AFAPS BOOK EXPO 2026 📚</title>
-
-    <!-- LINE LIFF SDK -->
+    <title>Share Flex Message Ready</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             margin: 0;
-            min-height: 100vh;
-            min-height: 100dvh;
-            padding: 20px;
-
-            font-family: Tahoma, sans-serif;
-
+            font-family: sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            height: 100vh;
+            background: #eef2ff;
         }
-
         .msg {
             display: none;
-            width: 100%;
-            max-width: 440px;
-            padding: 28px 22px;
-
-            background: #ffffff;
-            border-radius: 18px;
-
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
-
-            font-size: 16px;
-            line-height: 1.8;
+            padding: 20px 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            font-size: 18px;
             text-align: center;
-
-            color: #333333;
-            overflow-wrap: anywhere;
+            color: #333;
         }
-
-        .icon {
-            font-size: 42px;
-            margin-bottom: 12px;
-        }
-
-        #loadingMsg {
-            color: #4338ca;
-        }
-
-        #successMsg {
-            color: #15803d;
-        }
-
-        #errorMsg {
-            color: #b91c1c;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-
-            border: 3px solid #c7d2fe;
-            border-top-color: #4f46e5;
-            border-radius: 50%;
-
-            animation: spin 0.8s linear infinite;
-            vertical-align: middle;
-        }
-
-        .retry-button {
-            display: inline-block;
-            margin-top: 18px;
-            padding: 12px 24px;
-
-            border: none;
-            border-radius: 10px;
-
-            background: #4f46e5;
-            color: #ffffff;
-
-            font-size: 16px;
-            font-family: inherit;
-
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .retry-button:hover {
-            background: #3730a3;
-        }
-
-        .retry-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .hint {
-            margin-top: 12px;
-            color: #64748b;
-            font-size: 13px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 16px;
-            }
-
-            .msg {
-                padding: 24px 18px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
+        #errorMsg { 
+            color: #d9534f;
+            word-break: break-word;
+            max-width: 80vw;
         }
     </style>
 </head>
-
 <body>
-
-    <!-- กำลังดำเนินการ -->
-    <div
-        class="msg"
-        id="loadingMsg"
-        role="status"
-        aria-live="polite"
-    >
-        <div class="icon">
-            <span class="spinner"></span>
-        </div>
-
-        <strong>กำลังเตรียมการแชร์</strong>
-
-        <div class="hint">
-            กรุณารอสักครู่...
-        </div>
-    </div>
-
-    <!-- แชร์สำเร็จ -->
-    <div
-        class="msg"
-        id="successMsg"
-        role="status"
-        aria-live="polite"
-    >
-        <div class="icon">✅</div>
-
-        <strong>ดำเนินการแชร์เรียบร้อยแล้ว</strong>
-
-        <div class="hint">
-            ระบบกำลังดำเนินการปิดหน้าต่าง
-        </div>
-
-        <button
-            type="button"
-            class="retry-button"
-            id="closeButton"
-        >
-            ปิดหน้าต่าง
-        </button>
-    </div>
-
-    <!-- เกิดข้อผิดพลาด -->
-    <div
-        class="msg"
-        id="errorMsg"
-        role="alert"
-        aria-live="assertive"
-    >
-        <div class="icon">❌</div>
-
-        <strong>ไม่สามารถดำเนินการได้</strong>
-
-        <div id="errorDetail"></div>
-
-        <button
-            type="button"
-            class="retry-button"
-            id="retryButton"
-        >
-            ลองอีกครั้ง
-        </button>
-
-        <div class="hint">
-            หากยังไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่อ
-            และการตั้งค่า LIFF
-        </div>
-    </div>
+    <div class="msg" id="loadingMsg">⏳⏳ กำลังเตรียมการแชร์...รอสักครู่ ⏳⏳</div>
+    <div class="msg" id="successMsg">✅ แชร์ให้เพื่อน ๆ สำเร็จแล้ว</div>
+    <div class="msg" id="errorMsg">❌ เกิดข้อผิดพลาดในการแชร์</div> 
 
     <script>
-        "use strict";
-
-        // ==========================================
-        // 1. ตั้งค่า LIFF
-        // ==========================================
-
-        const LIFF_ID = "2007236505-njPbwwm";
-
-        // ==========================================
-        // 2. กำหนด Flex Message
-        // ==========================================
-
-        const flexMessage = {
+        // โครงสร้าง Flex Message ที่ปรับปรุงความถูกต้องแล้ว
+        const flexData = {
             type: "flex",
-
-            altText: "📢 เรียนเชิญร่วมงาน AFAPS BOOK EXPO 2026 📚",
-
+            altText: "📢 เรียนเชิญร่วมงาน AFAPS BOOK EXPO 2026 📚📚",
             contents: {
                 type: "bubble",
                 size: "giga",
-
                 body: {
                     type: "box",
                     layout: "vertical",
-                    paddingAll: "0px",
-                    spacing: "none",
-
                     contents: [
                         {
                             type: "image",
-
                             url: "https://i.postimg.cc/y6RLqzbF/kahndkar.png",
-
-                            size: "full",
-                            aspectRatio: "2:3",
                             aspectMode: "fit",
-
+                            size: "full",
+                            aspectRatio: "2:3"
+                        },
+                        {
+                            type: "button",
                             action: {
                                 type: "uri",
-
-                                uri: "https://qr.generatorqr.com/storage/pdf/f8/7d/f84db393-7dee-4c4e-bbfb-fc2201c4836d6ad5e364709aa4.90184037.pdf"
-                            }
+                                uri: "https://qr.generatorqr.com/storage/pdf/f8/7d/f84db393-7dee-4c4e-bbfb-fc2201c4836d6ad5e364709aa4.90184037.pdf",
+                                label: " "
+                            },
+                            position: "absolute",
+                            offsetTop: "90%",
+                            offsetBottom: "2%",
+                            offsetStart: "20%",
+                            offsetEnd: "51%"
+                        },
+                        {
+                            type: "button",
+                            action: {
+                                type: "uri",
+                                uri: "https://liff.line.me/2007236505-njPbwwmN",
+                                label: " "
+                            },
+                            position: "absolute",
+                            offsetTop: "90%",
+                            offsetBottom: "2%",
+                            offsetStart: "52%",
+                            offsetEnd: "18%"
                         }
-                    ]
+                    ],
+                    paddingAll: "0px"
                 }
             }
         };
 
-        // ==========================================
-        // 3. ตัวแปรควบคุมการทำงาน
-        // ==========================================
-
-        let isProcessing = false;
-        let loginRedirecting = false;
-
-        const loadingMsg = document.getElementById("loadingMsg");
-        const successMsg = document.getElementById("successMsg");
-        const errorMsg = document.getElementById("errorMsg");
-
-        const errorDetail = document.getElementById("errorDetail");
-        const retryButton = document.getElementById("retryButton");
-        const closeButton = document.getElementById("closeButton");
-
-        // ==========================================
-        // 4. แสดงสถานะ
-        // ==========================================
-
         function displayMessage(id) {
-            document.querySelectorAll(".msg").forEach(function (element) {
-                element.style.display = "none";
-            });
-
+            document.querySelectorAll('.msg').forEach(el => el.style.display = 'none');
             const target = document.getElementById(id);
-
-            if (target) {
-                target.style.display = "block";
-            }
+            if (target) target.style.display = 'block';
         }
-
-        // ==========================================
-        // 5. แสดงข้อผิดพลาด
-        // ==========================================
-
-        function displayError(message) {
-            errorDetail.textContent = message || "ไม่ทราบสาเหตุ";
-            displayMessage("errorMsg");
-        }
-
-        // ==========================================
-        // 6. ปิดหน้าต่าง LIFF
-        // ==========================================
-
-        function closeLiffWindow() {
-            try {
-                if (
-                    typeof liff !== "undefined" &&
-                    liff.isInClient()
-                ) {
-                    liff.closeWindow();
-                } else {
-                    displayMessage("successMsg");
-                }
-            } catch (error) {
-                console.error("Close window error:", error);
-                displayMessage("successMsg");
-            }
-        }
-
-        closeButton.addEventListener("click", closeLiffWindow);
-
-        // ==========================================
-        // 7. เริ่มต้น LIFF และแชร์ Flex Message
-        // ==========================================
 
         async function main() {
-            if (isProcessing || loginRedirecting) {
-                return;
-            }
-
-            isProcessing = true;
-            retryButton.disabled = true;
-
-            displayMessage("loadingMsg");
-
+            displayMessage('loadingMsg');
+            
             try {
-                // ตรวจสอบ LIFF SDK
-                if (typeof liff === "undefined") {
-                    throw new Error(
-                        "โหลด LINE LIFF SDK ไม่สำเร็จ " +
-                        "กรุณาตรวจสอบอินเทอร์เน็ต"
-                    );
-                }
+                // 1. Initial LIFF
+                await liff.init({ liffId: "2007236505-njPbwwmN" });  
 
-                // เริ่มต้น LIFF
-                await liff.init({
-                    liffId: LIFF_ID
-                });
-
-                // ตรวจสอบการเข้าสู่ระบบ
+                // 2. Check Login
                 if (!liff.isLoggedIn()) {
-                    loginRedirecting = true;
-
-                    // คืนสถานะก่อนเปลี่ยนหน้า
-                    isProcessing = false;
-
                     liff.login();
                     return;
                 }
-
-                // ตรวจสอบความพร้อมของ Share Target Picker
-                if (
-                    typeof liff.shareTargetPicker !== "function" ||
-                    !liff.isApiAvailable("shareTargetPicker")
-                ) {
-                    throw new Error(
-                        "สภาพแวดล้อมนี้ไม่รองรับ Share Target Picker " +
-                        "กรุณาเปิดผ่าน LINE หรืออุปกรณ์ที่รองรับ"
-                    );
+                
+                // 3. Check API Availability
+                if (!liff.isApiAvailable("shareTargetPicker")) {
+                    throw new Error("API shareTargetPicker ไม่รองรับ หรือกรุณาเปิดในแอป LINE");
                 }
 
-                // แชร์ Flex Message
-                const result = await liff.shareTargetPicker(
-                    [flexMessage],
-                    {
-                        isMultiple: true
-                    }
-                );
-
-                // ตรวจสอบผลการแชร์
+                // 4. สั่งเปิด Share Target Picker
+                const result = await liff.shareTargetPicker([flexData]);
+                
                 if (result) {
-                    displayMessage("successMsg");
-
-                    // ปิดหน้าต่างอัตโนมัติเมื่อเปิดใน LINE
-                    if (liff.isInClient()) {
-                        setTimeout(function () {
-                            closeLiffWindow();
-                        }, 2000);
-                    }
+                    displayMessage('successMsg');
+                    setTimeout(() => liff.closeWindow(), 2000);
                 } else {
-                    // ผู้ใช้ยกเลิกการแชร์
-                    displayError(
-                        "คุณยกเลิกการแชร์ สามารถกดลองอีกครั้งได้"
-                    );
+                    liff.closeWindow();
                 }
 
-            } catch (error) {
-                console.error("LIFF Share Error:", error);
-
-                let message = "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
-
-                if (error && error.message) {
-                    message = error.message;
-                }
-
-                displayError(message);
-
-            } finally {
-                isProcessing = false;
-                retryButton.disabled = false;
+            } catch (err) {
+                console.error("Share Error:", err);
+                const errorMsgElement = document.getElementById('errorMsg');
+                errorMsgElement.innerHTML = `❌ เกิดข้อผิดพลาด: <br> ${err.message || 'ไม่ทราบสาเหตุ'}`;
+                displayMessage('errorMsg'); 
             }
         }
 
-        // ==========================================
-        // 8. ปุ่มลองอีกครั้ง
-        // ==========================================
-
-        retryButton.addEventListener("click", function () {
-            main();
-        });
-
-        // ==========================================
-        // 9. เริ่มทำงานเมื่อโหลดหน้าเว็บ
-        // ==========================================
-
-        window.addEventListener("load", function () {
-            main();
-        });
+        main();
     </script>
-
 </body>
 </html>
-```
